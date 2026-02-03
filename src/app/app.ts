@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { Cabecalho } from "./components/cabecalho/cabecalho";
-import { Rodape } from "./components/rodape/rodape";
+import { Hero } from "./components/hero/hero";
+import { Dashboard } from "./components/dashboard/dashboard";
 
 @Component({
   selector: 'app-root',
-  imports: [Cabecalho, Rodape],
+  imports: [Hero, Dashboard],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
