@@ -1,0 +1,16 @@
+<div class="flex text-center justify-between bg-white mt-4 pt-2 pb-2 px-2 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out">
+  <div class="flex flex-row gap-3 items-center">
+    <button (click)="onToggle()"
+      class="self-center w-6 h-6 rounded-full cursor-pointer flex items-center justify-center text-white font-bold transition-all duration-300 border-2"
+      [class.border-gray-400]="!task().done"
+      [class.bg-green-500]="task().done"
+      [class.border-green-500]="task().done">
+      {{ task().done ? '✓' : '' }}
+    </button>
+    <p class="wrap-break-word font-medium text-gray-900" [class.line-through]="task().done">{{ task().title }} - ID: {{ task().id }}</p>
+  </div>
+  <div class="flex flex-row gap-3 items-center">
+    <button class="bg-blue-700 hover:bg-blue-500 transition-all duration-300 cursor-pointer rounded-lg py-1 px-2 font-medium text-white">Editar</button>
+    <button class="bg-red-700 hover:bg-red-600 transition-all duration-300 cursor-pointer rounded-lg py-1 px-2 font-medium text-white">Excluir</button>
+  </div>
+</div>
