@@ -8,8 +8,10 @@
   />
 } @else {
   <p
-    class="wrap-break-word font-medium text-gray-900"
+    class="wrap-break-word font-medium"
     [class.line-through]="isStrikethrough()"
+    [class.text-gray-900]="!isStrikethrough()"
+    [class.text-gray-400]="isStrikethrough()"
   >
     {{ value() }}
   </p>
