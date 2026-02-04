@@ -7,7 +7,6 @@ import { ApiTask } from './api-task';
 @Injectable({
   providedIn: 'root',
 })
-
 export class TaskService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/tasks';
@@ -28,7 +27,7 @@ export class TaskService {
   addTask(title: string): Observable<ApiTask> {
     const taskData = {
       title,
-      is_done: false,
+      done: false,
     };
 
     return this.http.post<ApiTask>(this.apiUrl, taskData).pipe(
@@ -44,16 +43,28 @@ export class TaskService {
   }
 
   toggleTask(task: Task): void {
-    this.tasks.update((tasks) =>
-      tasks.map((t) => (t.id === task.id ? { ...t, done: !t.done } : t)),
-    );
+    const updatedDone = !task.done;
+
+    this.http
+      .patch<ApiTask>(`${this.apiUrl}/${task.id}`, {
+        done: updatedDone,
+      })
+      .subscribe({
+        next: (updated) => {
+          const normalized = updated ? this.normalizeTask(updated) : { ...task, done: updatedDone };
+          this.tasks.update((tasks) => tasks.map((t) => (t.id === task.id ? normalized : t)));
+        },
+        error: (error) => {
+          console.error('Erro ao atualizar tarefa:', error);
+        },
+      });
   }
 
   private normalizeTask(task: ApiTask): Task {
     return {
       id: task.id,
       title: task.title,
-      done: task.done ?? task.is_done ?? false,
+      done: task.done ?? false,
     };
   }
 }

@@ -4,12 +4,23 @@
     <app-amount-box class="flex-1" [dado]="'Pendentes'" [quantidade]="pendingCount()"></app-amount-box>
     <app-amount-box class="flex-1" [dado]="'Concluídas'" [quantidade]="doneCount()"></app-amount-box>
   </div>
+
+  <div class="pb-6">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm font-medium text-gray-700">Progresso</span>
+      <span class="text-sm font-medium text-gray-700">{{ progressPercent() }}%</span>
+    </div>
+    <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden" role="progressbar" aria-label="Progresso de tarefas concluídas" [attr.aria-valuemin]="0" [attr.aria-valuemax]="100" [attr.aria-valuenow]="progressPercent()">
+      <div class="h-full bg-green-500 rounded-full transition-all duration-500 ease-in-out" [style.width.%]="progressPercent()"></div>
+    </div>
+  </div>
+
   <div class="flex justify-between gap-4 text-center bg-white pt-2 pb-2 px-2 rounded-lg shadow-md">
     <span class="pb-2 pt-1 px-4 bg-blue-500 text-white text-2xl rounded-lg cursor-default">+</span>
 
     <input type="text"
     placeholder="Adicionar nova tarefa..."
-    class="w-full outline-none placeholder"
+    class="w-full outline-none placeholder:text-gray-400"
     [value]="taskInput()"
     (input)="onInputChange($event)"
     (keyup.enter)="addTask()">
@@ -17,7 +28,7 @@
     <button
       [disabled]="!hasText()"
       [class]="hasText() ? 'bg-blue-700 cursor-pointer' : 'bg-blue-300 cursor-not-allowed'"
-      class="font-medium text-white px-3 py-1 rounded-2xl transition-colors"
+      class="font-medium text-white px-3 py-1 rounded-lg transition-colors"
       (click)="addTask()">Adicionar
     </button>
   </div>

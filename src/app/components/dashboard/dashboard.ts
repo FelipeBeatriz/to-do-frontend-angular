@@ -16,6 +16,15 @@ export class Dashboard {
   totalCount = computed(() => this.tasks().length);
   doneCount = computed(() => this.tasks().filter((task) => task.done).length);
   pendingCount = computed(() => this.tasks().filter((task) => !task.done).length);
+  progressPercent = computed(() => {
+    const total = this.totalCount();
+
+    if (total === 0) {
+      return 0;
+    }
+
+    return Math.round((this.doneCount() / total) * 100);
+  });
 
   onInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
