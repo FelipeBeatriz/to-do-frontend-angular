@@ -1,20 +1,21 @@
-import { Component, inject, signal, computed, output } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { AmountBox } from '../amount-box/amount-box';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-dashboard',
   imports: [AmountBox],
   templateUrl: './dashboard.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class Dashboard {
-  private http = inject(HttpClient);
+  private taskService = inject(TaskService);
   taskInput = signal('');
   hasText = computed(() => this.taskInput().trim().length > 0);
-  taskAdded = output<void>();
-
-  private apiUrl = 'http://localhost:3000/tasks';
+  tasks = this.taskService.tasks;
+  totalCount = computed(() => this.tasks().length);
+  doneCount = computed(() => this.tasks().filter((task) => task.done).length);
+  pendingCount = computed(() => this.tasks().filter((task) => !task.done).length);
 
   onInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -28,19 +29,9 @@ export class Dashboard {
       return;
     }
 
-    const taskData = {
-      title: task,
-      is_done: false,
-    };
-
-    this.http.post(this.apiUrl, taskData).subscribe({
-      next: (response) => {
-        console.log('Tarefa adicionada com sucesso:', response);
+    this.taskService.addTask(task).subscribe({
+      next: () => {
         this.taskInput.set('');
-        this.taskAdded.emit();
-      },
-      error: (error) => {
-        console.error('Erro ao adicionar tarefa:', error);
       },
     });
   }

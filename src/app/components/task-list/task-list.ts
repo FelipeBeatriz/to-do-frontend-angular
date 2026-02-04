@@ -1,39 +1,27 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CreatedTask } from '../created-task/created-task';
 import { Task } from '../created-task/created-task-model';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-task-list',
   imports: [CreatedTask],
   templateUrl: './task-list.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskList implements OnInit {
-  private http = inject(HttpClient);
-  tasks = signal<Task[]>([]);
+  private taskService = inject(TaskService);
+  tasks = this.taskService.tasks;
 
   ngOnInit(): void {
-    this.getTasks();
-  }
-
-  getTasks(): void {
-    this.http.get<Task[]>('http://localhost:3000/tasks').subscribe({
-      next: (data) => {
-        this.tasks.set(data);
-      },
-      error: (error) => {
-        console.error('Erro ao buscar tasks:', error);
-      },
-    });
+    this.taskService.loadTasks();
   }
 
   refreshTasks(): void {
-    this.getTasks();
+    this.taskService.loadTasks();
   }
 
   toggleTask(task: Task): void {
-    this.tasks.update((tasks) =>
-      tasks.map((t) => (t.id === task.id ? { ...t, done: !t.done } : t)),
-    );
+    this.taskService.toggleTask(task);
   }
 }
