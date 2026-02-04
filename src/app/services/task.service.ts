@@ -60,6 +60,22 @@ export class TaskService {
       });
   }
 
+  updateTaskTitle(task: Task, newTitle: string): void {
+    this.http
+      .patch<ApiTask>(`${this.apiUrl}/${task.id}`, {
+        title: newTitle,
+      })
+      .subscribe({
+        next: (updated) => {
+          const normalized = updated ? this.normalizeTask(updated) : { ...task, title: newTitle };
+          this.tasks.update((tasks) => tasks.map((t) => (t.id === task.id ? normalized : t)));
+        },
+        error: (error) => {
+          console.error('Erro ao atualizar título da tarefa:', error);
+        },
+      });
+  }
+
   private normalizeTask(task: ApiTask): Task {
     return {
       id: task.id,
