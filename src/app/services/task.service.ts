@@ -76,6 +76,17 @@ export class TaskService {
       });
   }
 
+  deleteTask(task: Task): void {
+    this.http.delete(`${this.apiUrl}/${task.id}`).subscribe({
+      next: () => {
+        this.tasks.update((tasks) => tasks.filter((t) => t.id !== task.id));
+      },
+      error: (error) => {
+        console.error('Erro ao excluir tarefa:', error);
+      },
+    });
+  }
+
   private normalizeTask(task: ApiTask): Task {
     return {
       id: task.id,

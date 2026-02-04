@@ -2,10 +2,11 @@ import { Component, input, output, inject, signal, viewChild } from '@angular/co
 import { Task } from './created-task-model';
 import { TaskService } from '../../services/task.service';
 import { EditableText } from '../editable-text/editable-text';
+import { ConfirmModal } from '../confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-created-task',
-  imports: [EditableText],
+  imports: [EditableText, ConfirmModal],
   templateUrl: './created-task.html',
 })
 export class CreatedTask {
@@ -15,6 +16,7 @@ export class CreatedTask {
 
   editableTextRef = viewChild(EditableText);
   isEditing = signal(false);
+  showDeleteModal = signal(false);
 
   onToggle(): void {
     this.taskToggled.emit(this.task());
@@ -38,5 +40,18 @@ export class CreatedTask {
 
   cancelEdit(): void {
     this.editableTextRef()?.cancelEdit();
+  }
+
+  openDeleteModal(): void {
+    this.showDeleteModal.set(true);
+  }
+
+  confirmDelete(): void {
+    this.taskService.deleteTask(this.task());
+    this.showDeleteModal.set(false);
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal.set(false);
   }
 }

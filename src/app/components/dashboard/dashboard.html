@@ -1,5 +1,5 @@
 <section>
-  <div class="flex flex-row gap-4 justify-center pb-6">
+  <div class="flex flex-col sm:flex-row gap-4 justify-center pb-6">
     <app-amount-box class="flex-1" [dado]="'Total'" [quantidade]="totalCount()"></app-amount-box>
     <app-amount-box class="flex-1" [dado]="'Pendentes'" [quantidade]="pendingCount()"></app-amount-box>
     <app-amount-box class="flex-1" [dado]="'Concluídas'" [quantidade]="doneCount()"></app-amount-box>
